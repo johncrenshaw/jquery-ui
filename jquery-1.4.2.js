@@ -371,6 +371,11 @@ jQuery.extend({
 	
 	// Is the DOM ready to be used? Set to true once it occurs.
 	isReady: false,
+  
+	// MYEDIT: stub so that ready can be extended without having
+	// to be rebound to load events (load events point here rather
+	// than directly at ready())
+	_onReady: function() {jQuery.ready();},
 	
 	// Handle when the DOM is ready
 	ready: function() {
@@ -393,7 +398,7 @@ jQuery.extend({
 				}
 
 				// Reset the list of functions
-				readyList = null;
+				readyList = []; // MYEDIT: setting to "null" prevents anything from being added to the list again. This becomes a problem if you try to implement ajax includes.
 			}
 
 			// Trigger any bound ready events
@@ -422,7 +427,7 @@ jQuery.extend({
 			document.addEventListener( "DOMContentLoaded", DOMContentLoaded, false );
 			
 			// A fallback to window.onload, that will always work
-			window.addEventListener( "load", jQuery.ready, false );
+			window.addEventListener( "load", jQuery._onReady, false ); // MYEDIT: use stub so ready() can be extended easily
 
 		// If IE event model is used
 		} else if ( document.attachEvent ) {
@@ -431,7 +436,7 @@ jQuery.extend({
 			document.attachEvent("onreadystatechange", DOMContentLoaded);
 			
 			// A fallback to window.onload, that will always work
-			window.attachEvent( "onload", jQuery.ready );
+			window.attachEvent( "onload", jQuery._onReady ); // MYEDIT: use stub so ready() can be extended easily
 
 			// If IE and not a frame
 			// continually check to see if the document is ready
